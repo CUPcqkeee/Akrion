@@ -1,0 +1,111 @@
+import disnake
+from disnake.ext import commands
+from datetime import datetime, timedelta, timezone
+
+
+class AdminsProtect(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+        self.protected_roles = [1191445517381681153, 1191445513141223535, 1191445236484935830]
+        self.target_role = 1191532567481040916
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        guild = member.guild
+        fetched_member = await guild.fetch_member(member.id)
+        if fetched_member:
+            if not any(role.id in self.protected_roles for role in fetched_member.roles):
+                await self.process_member(fetched_member)
+
+    @commands.Cog.listener()
+    async def on_member_ban(self, guild, user):
+        member = await guild.fetch_member(user.id)
+        if not any(role.id in self.protected_roles for role in member.roles):
+            await self.process_member(member)
+
+    async def process_member(self, member):
+        try:
+            await member.edit(roles=[], reason="Попытка изменения сервера")
+            role_to_give = member.guild.get_role(self.target_role)
+            if role_to_give:
+                await member.add_roles(role_to_give, reason="Попытка изменения сервера")
+        except Exception as e:
+            print(f"Error: {e}")
+
+
+
+# # # # #
+#     @commands.Cog.listener()
+#     async def on_ready(self):
+#         self.last_audit_request = datetime.now(timezone(timedelta(hours=+3))) - timedelta(seconds=1)
+#         print(self.last_audit_request)
+#
+#     @commands.Cog.listener()
+#     async def on_guild_channel_update(self, before, after):
+#         if before.guild.id == self.guild:
+#             if datetime.now(timezone(timedelta(hours=+3))) - self.last_audit_request > timedelta(seconds=1):
+#                 guild = self.bot.get_guild(self.guild)
+#                 channel_edit = await guild.audit_logs(action=disnake.AuditLogAction.channel_update,
+#                                                       limit=1).flatten()
+#                 channel_edit_user = channel_edit[0].user
+#                 self.last_audit_request = datetime.now(timezone(timedelta(hours=+3)))
+#                 if not await self.has_required_role(after.guild, channel_edit_user):
+#                     await after.edit(name=before.name)
+#                     try:
+#                         await channel_edit_user.edit(roles=[])
+#                     except BaseException as e:
+#                         print(e)
+#                     role = guild.get_role(self.track_role)
+#                     await channel_edit_user.add_roles(role)
+#
+#                     embed = disnake.Embed(title=f"<a:question_red:916001629122216036> Админ-логирование",
+#                                           colour=0x303136,
+#                                           description=f"**Уважаемый(-ая)** {channel_edit_user.mention}"
+#                                                       f"\n> Вы попытались воспользоваться админ правами и были наказаны."
+#                                                       f"\n> Если вы не знали/случайно воспользовались ими, тогда напишите старшему персоналу.")
+#                     await channel_edit_user.send(embed=embed)
+#             else:
+#                 return
+#
+#     @commands.Cog.listener()
+#     async def on_member_ban(self, guild, user):
+#         if guild == self.guild:
+#             if not await self.has_required_role(guild, guild.get_member(user.id)):
+#                 try:
+#                     await guild.unban(user)
+#                     await user.edit(roles=[])
+#
+#                     embed = disnake.Embed(title=f"<a:question_red:916001629122216036> Админ-логирование",
+#                                           colour=0x303136,
+#                                           description=f"**Уважаемый(-ая)** {user.mention}"
+#                                                       f"\n> Вы попытались воспользоваться админ правами и были наказаны."
+#                                                       f"\n> Если вы не знали/случайно воспользовались ими, тогда напишите старшему персоналу.")
+#                     await user.send(embed=embed)
+#                 except BaseException as ev:
+#                     print(ev)
+#
+#     @commands.Cog.listener()
+#     async def on_member_remove(self, member):
+#         if not await self.has_required_role(member.guild, member):
+#             try:
+#                 #await member.guild.ban(member, reason="Попытка кика без необходимой роли")
+#                 await member.edit(roles=[])
+#
+#                 embed = disnake.Embed(title=f"<a:question_red:916001629122216036> Админ-логирование",
+#                                       colour=0x303136,
+#                                       description=f"**Уважаемый(-ая)** {member.mention}"
+#                                                   f"\n> Вы попытались воспользоваться админ правами и были наказаны."
+#                                                   f"\n> Если вы не знали/случайно воспользовались ими, тогда напишите старшему персоналу.")
+#                 await member.send(embed=embed)
+#             except BaseException as ev:
+#                 print(ev)
+#
+#     async def has_required_role(self, guild, member):
+#         required_roles = [guild.get_role(role_id) for role_id in self.requiered_role]
+#         member_roles = member.roles
+#
+#         return any(required_role in member_roles for required_role in required_roles)
+
+
+def setup(bot):
+    bot.add_cog(AdminsProtect(bot))

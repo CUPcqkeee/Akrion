@@ -1,0 +1,20 @@
+{
+  "Database": {
+    "User": "Akrion",
+    "Password": "FJ398S*&G4-0SD+_G$#SFGU87Y#@HFBMN@!@@#FBu98SDFNG",
+    "Host": "localhost",
+    "Database_Name": "DiscordBots"
+  },
+  "Main": {
+    "Token": "MTE0MjUyNTgzNzkyOTg5NDA3MA.GYoH58.FoZ0ZkRhUbGUmF5x0mQIKPmNCdx-1QImyPh13E",
+    "Author": "CUPcqkeee"
+  },
+  "Emojis": {
+    "success": "<a:Yes_Check:877264845504917565>",
+    "not_success": "<a:No_Check:877264845366517770>",
+    "load": "<a:loops:898905497820880926>",
+    "load_v2": "<a:waiting:1011657420860293180>",
+    "dot": "<:ddddd:1191556735433977976>",
+    "online": "<:online:892647180614123540>"
+  }
+  }
