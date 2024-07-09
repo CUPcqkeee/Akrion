@@ -1,12 +1,12 @@
 {
   "Database": {
     "User": "Akrion",
-    "Password": "FJ398S*&G4-0SD+_G$#SFGU87Y#@HFBMN@!@@#FBu98SDFNG",
+    "Password": "PASSWORD",
     "Host": "localhost",
     "Database_Name": "DiscordBots"
   },
   "Main": {
-    "Token": "MTE0MjUyNTgzNzkyOTg5NDA3MA.GYoH58.FoZ0ZkRhUbGUmF5x0mQIKPmNCdx-1QImyPh13E",
+    "Token": "TOKEN",
     "Author": "CUPcqkeee"
   },
   "Emojis": {
